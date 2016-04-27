@@ -1,0 +1,5 @@
+#
+#Add to crontab
+#
+
+*/1 *   * * *   root    /etc/cron.d/netflow-clean.sh
