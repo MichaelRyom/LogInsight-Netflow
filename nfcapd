@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+#/etc/rc.d/init.d/nfcapd
+#
+### BEGIN INIT INFO
+# Provides:          nfcapd
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: nfcapd daemon
+# Description:       nfcapd daemon
+### END INIT INFO
+#
+#
+#
+#
+
+
+
+start() {
+        echo -n "Starting : NetFlow Capture Daemon"
+        echo
+                if [ -f /var/run/nfcapd.pid ]; then
+                PID=$(cat /var/run/nfcapd.pid)
+                echo NetFlow Capture Daemon already running: $PID
+                exit 2;
+
+        else
+                /usr/local/bin/nfcapd -z -w -D -T all -l /tmp/ -I any -t 60 -P  /var/run/nfcapd.pid
+				sleep 1
+				PID=$(cat /var/run/nfcapd.pid)
+				echo NetFlow Capture Daemon is started: $PID
+        return
+        fi
+}
+
+stop() {
+        echo -n "Shutting down : NetFlow Capture Daemon"
+        echo
+
+        kill $(cat /var/run/nfcapd.pid)
+        return
+}
+
+status(){
+			    if [ -f /var/run/nfcapd.pid ]; then
+                PID=$(cat /var/run/nfcapd.pid)
+                echo NetFlow Capture Daemon is running: $PID
+                exit 2;
+
+        else
+                echo NetFlow Capture Daemon is stopped
+		return
+        fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+		status
+        ;;
+    restart)
+        stop
+		sleep 1
+        start
+        ;;
+    *)
+        echo "Usage:  {start|stop|status|restart]"
+        exit 1
+        ;;
+esac
+exit $?
