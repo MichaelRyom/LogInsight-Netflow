@@ -1,0 +1,19 @@
+#Install
+apt-get install gcc flex librrd-dev make
+
+cd /usr/local/src/
+
+wget https://sourceforge.net/projects/nfdump/files/stable/nfdump-1.6.13/nfdump-1.6.13.tar.gz
+gzip -dc nfdump-1.6.13.tar.gz | tar -xf -
+cd nfdump-1.6.13
+
+./configure --enable-nsel  --enable-sflow
+make
+make install
+
+#Copy files over to the correct locations
+
+#Post changes
+chmod +x /etc/init.d/nfcapd
+chmod +x /etc/cron.d/netflow-clean.sh
+update-rc.d nfcapd defaults
